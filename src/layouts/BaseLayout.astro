@@ -165,6 +165,52 @@ const { title = siteConfig.businessName } = Astro.props;
             });
           });
 
+          let touchStartX = null;
+          let touchStartY = null;
+          viewport.addEventListener(
+            "touchstart",
+            (e) => {
+              if (e.touches.length !== 1) return;
+              touchStartX = e.touches[0].clientX;
+              touchStartY = e.touches[0].clientY;
+            },
+            { passive: true }
+          );
+          viewport.addEventListener(
+            "touchcancel",
+            () => {
+              touchStartX = null;
+              touchStartY = null;
+            },
+            { passive: true }
+          );
+          viewport.addEventListener(
+            "touchend",
+            (e) => {
+              if (touchStartX === null || touchStartY === null || slideCount <= 1) return;
+              if (e.changedTouches.length !== 1) {
+                touchStartX = null;
+                touchStartY = null;
+                return;
+              }
+              const dx = e.changedTouches[0].clientX - touchStartX;
+              const dy = e.changedTouches[0].clientY - touchStartY;
+              touchStartX = null;
+              touchStartY = null;
+              const minSwipe = 48;
+              if (Math.abs(dx) < minSwipe) return;
+              if (Math.abs(dx) <= Math.abs(dy)) return;
+              if (dx < 0) {
+                goTo(index + 1);
+              } else {
+                goTo(index - 1);
+              }
+              clearAuto();
+              startAuto();
+            },
+            { passive: true }
+          );
+
           el.addEventListener("mouseenter", clearAuto);
           el.addEventListener("mouseleave", startAuto);
           el.addEventListener("focusin", clearAuto);
