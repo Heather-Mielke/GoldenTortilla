@@ -1,0 +1,97 @@
+---
+import { navLinks, siteConfig } from "../../data/site";
+---
+
+<header class="card gt-header" style="position: fixed; top: 0; left: 0; right: 0; z-index: 20; border-radius: 0; border-inline: 0;">
+  <div class="container gt-header__inner">
+    <a href="/" class="gt-header__brand">
+      <span class="gt-header__badge">GT</span>
+      <span>{siteConfig.businessName}</span>
+    </a>
+    <button
+      class="gt-header__menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="gt-header-nav"
+      aria-label="Toggle navigation menu"
+    >
+      <span class="gt-header__menu-icon" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    </button>
+    <nav id="gt-header-nav" class="gt-header__nav">
+      {navLinks.map((link) => (
+        <a class="gt-header__link" href={link.href}>
+          {link.label}
+        </a>
+      ))}
+      <a class="btn btn-primary gt-header__order-btn" href={siteConfig.ctaPrimaryHref} target="_blank" rel="noopener noreferrer">
+        {siteConfig.ctaPrimaryLabel}
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector('.gt-header');
+  if (header) {
+    const nav = header.querySelector('.gt-header__nav');
+    const menuToggle = header.querySelector('.gt-header__menu-toggle');
+
+    const syncHeaderHeight = () => {
+      document.documentElement.style.setProperty('--header-height', `${header.offsetHeight}px`);
+    };
+
+    const syncHeaderState = () => {
+      header.classList.toggle('gt-header--scrolled', window.scrollY > 10);
+    };
+
+    syncHeaderHeight();
+    syncHeaderState();
+    window.addEventListener('load', syncHeaderHeight);
+    window.addEventListener('resize', syncHeaderHeight);
+    window.addEventListener('scroll', syncHeaderState, { passive: true });
+
+    if ('ResizeObserver' in window) {
+      const observer = new ResizeObserver(syncHeaderHeight);
+      observer.observe(header);
+    }
+
+    const mobileBreakpoint = window.matchMedia('(max-width: 980px)');
+
+    const closeMenu = () => {
+      if (!(nav instanceof HTMLElement) || !(menuToggle instanceof HTMLButtonElement)) return;
+      nav.classList.remove('is-open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    };
+
+    const toggleMenu = () => {
+      if (!(nav instanceof HTMLElement) || !(menuToggle instanceof HTMLButtonElement)) return;
+      const willOpen = !nav.classList.contains('is-open');
+      nav.classList.toggle('is-open', willOpen);
+      menuToggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    };
+
+    menuToggle?.addEventListener('click', toggleMenu);
+
+    nav?.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        if (mobileBreakpoint.matches) closeMenu();
+      });
+    });
+
+    window.addEventListener('resize', () => {
+      if (!mobileBreakpoint.matches) closeMenu();
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!mobileBreakpoint.matches) return;
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (header.contains(target)) return;
+      closeMenu();
+    });
+  }
+</script>

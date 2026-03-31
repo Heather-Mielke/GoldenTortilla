@@ -1,0 +1,39 @@
+---
+import { location } from "../../data/location";
+---
+
+<section id="location" class="section location-section" aria-labelledby="location-heading">
+  <div class="container">
+    <h2 id="location-heading" class="location-section__title">{location.heading}</h2>
+    <p class="location-section__lede">{location.lede}</p>
+
+    <div class="location-section__grid">
+      <address class="location-section__address card">
+        <p class="location-section__label">Address</p>
+        {location.addressLines.map((line) => (
+          <p class="location-section__line">{line}</p>
+        ))}
+        <p class="location-section__map-link">
+          <a href={location.mapsOpenUrl} target="_blank" rel="noopener noreferrer">
+            Open in Google Maps
+          </a>
+        </p>
+      </address>
+
+      <div class="location-section__map">
+        <div class="location-map-frame card">
+          <iframe
+            title="Business location on Google Maps"
+            src={location.mapsEmbedSrc}
+            width="600"
+            height="450"
+            style="border: 0"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

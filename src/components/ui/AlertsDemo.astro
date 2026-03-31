@@ -1,0 +1,34 @@
+---
+const alerts = [
+  { variant: "info" as const, text: "Info: Theme colors update buttons, borders, and accents site-wide." },
+  { variant: "success" as const, text: "Success: Your message was sent (demo only)." },
+  { variant: "warning" as const, text: "Warning: Replace placeholder copy before launch." },
+  { variant: "error" as const, text: "Error: Example error state for forms or failed actions." },
+];
+---
+
+<section class="section" aria-label="Alert examples">
+  <div class="container">
+    <h2 style="margin: 0 0 1rem; color: var(--brand);">Alerts</h2>
+    <p style="margin: 0 0 1rem; color: var(--muted);">Dismissible banners — reuse the markup pattern in any page.</p>
+    <div>
+      {alerts.map((a) => (
+        <div class:list={["alert", `alert--${a.variant}`]} role="alert" data-alert>
+          <p class="alert__body">{a.text}</p>
+          <button type="button" class="alert__dismiss" data-alert-dismiss aria-label="Dismiss alert">
+            ×
+          </button>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll("[data-alert]").forEach((alert) => {
+    const btn = alert.querySelector("[data-alert-dismiss]");
+    btn?.addEventListener("click", () => {
+      alert.remove();
+    });
+  });
+</script>

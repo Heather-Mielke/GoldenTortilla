@@ -1,0 +1,191 @@
+---
+import "../styles/global.css";
+import SiteHeader from "../components/site/SiteHeader.astro";
+import SiteFooter from "../components/site/SiteFooter.astro";
+import WelcomeModal from "../components/ui/WelcomeModal.astro";
+import { siteConfig } from "../data/site";
+
+const { title = siteConfig.businessName } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={siteConfig.tagline} />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23f6bc22'/%3E%3Ctext x='32' y='39' text-anchor='middle' font-size='22' font-family='Arial,sans-serif' font-weight='800' fill='%23221516'%3EGT%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="alternate icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+    <link rel="shortcut icon" href="/favicon.svg?v=2" />
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem("site-theme");
+          document.documentElement.setAttribute("data-theme", t || "blue");
+        } catch (_) {
+          document.documentElement.setAttribute("data-theme", "blue");
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <WelcomeModal />
+    <SiteHeader />
+    <main class="site-main">
+      <slot />
+    </main>
+    <SiteFooter />
+    <script is:inline>
+      (function () {
+        const sliderRoots = document.querySelectorAll("[data-slider-root]");
+        sliderRoots.forEach((root) => {
+          const el = root;
+          if (!(el instanceof HTMLElement)) return;
+          if (el.dataset.sliderInit === "1") return;
+          el.dataset.sliderInit = "1";
+
+          const viewport = el.querySelector("[data-slider-viewport]");
+          const track = el.querySelector("[data-slider-track]");
+          const slides = Array.from(el.querySelectorAll("[data-slider-slide]"));
+          const prevBtn = el.querySelector("[data-slider-prev]");
+          const nextBtn = el.querySelector("[data-slider-next]");
+          const dots = Array.from(el.querySelectorAll("[data-slider-dot]"));
+
+          if (!viewport || !track || slides.length < 1) return;
+          if (!(viewport instanceof HTMLElement) || !(track instanceof HTMLElement)) return;
+          if (prevBtn && !(prevBtn instanceof HTMLButtonElement)) return;
+          if (nextBtn && !(nextBtn instanceof HTMLButtonElement)) return;
+
+          const loop = el.dataset.sliderLoop === "true";
+          const autoplayMs = Number(el.dataset.sliderAutoplay || "0");
+          const canAutoplay = Number.isFinite(autoplayMs) && autoplayMs > 0;
+          const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          const slideCount = slides.length;
+          const seamlessLoop = loop && slideCount > 1;
+
+          if (seamlessLoop) {
+            const firstClone = slides[0]?.cloneNode(true);
+            if (firstClone instanceof HTMLElement) {
+              firstClone.setAttribute("aria-hidden", "true");
+              track.appendChild(firstClone);
+            }
+          }
+
+          let index = 0;
+          let timer = null;
+
+          function width() {
+            return viewport.getBoundingClientRect().width;
+          }
+
+          function setActiveDot() {
+            const activeIndex = seamlessLoop && index === slideCount ? 0 : index;
+            dots.forEach((dot, i) => {
+              dot.classList.toggle("slider__dot--active", i === activeIndex);
+            });
+          }
+
+          function setButtons() {
+            if (!prevBtn || !nextBtn) return;
+            if (loop) {
+              prevBtn.disabled = slideCount <= 1;
+              nextBtn.disabled = slideCount <= 1;
+              return;
+            }
+            prevBtn.disabled = index <= 0;
+            nextBtn.disabled = index >= slideCount - 1;
+          }
+
+          function render(animate = true) {
+            track.style.transition = animate ? "transform 0.35s ease" : "none";
+            track.style.transform = `translate3d(${-index * width()}px, 0, 0)`;
+            setButtons();
+            setActiveDot();
+          }
+
+          function goTo(nextIndex) {
+            if (slideCount <= 1) return;
+            if (seamlessLoop) {
+              if (nextIndex > slideCount) {
+                index = 1;
+              } else if (nextIndex < 0) {
+                index = slideCount - 1;
+              } else {
+                index = nextIndex;
+              }
+            } else if (loop) {
+              index = (nextIndex + slideCount) % slideCount;
+            } else {
+              index = Math.max(0, Math.min(slideCount - 1, nextIndex));
+            }
+            render(true);
+          }
+
+          function clearAuto() {
+            if (!timer) return;
+            clearInterval(timer);
+            timer = null;
+          }
+
+          function startAuto() {
+            if (!canAutoplay || reduceMotion || slideCount <= 1 || document.hidden) return;
+            clearAuto();
+            timer = setInterval(() => goTo(index + 1), autoplayMs);
+          }
+
+          if (seamlessLoop) {
+            track.addEventListener("transitionend", (event) => {
+              if (event.target !== track) return;
+              if (index !== slideCount) return;
+              index = 0;
+              render(false);
+            });
+          }
+
+          prevBtn?.addEventListener("click", () => {
+            goTo(index - 1);
+            clearAuto();
+            startAuto();
+          });
+          nextBtn?.addEventListener("click", () => {
+            goTo(index + 1);
+            clearAuto();
+            startAuto();
+          });
+          dots.forEach((dot) => {
+            const i = Number(dot.getAttribute("data-slider-index"));
+            dot.addEventListener("click", () => {
+              if (!Number.isFinite(i)) return;
+              goTo(i);
+              clearAuto();
+              startAuto();
+            });
+          });
+
+          el.addEventListener("mouseenter", clearAuto);
+          el.addEventListener("mouseleave", startAuto);
+          el.addEventListener("focusin", clearAuto);
+          el.addEventListener("focusout", startAuto);
+
+          document.addEventListener("visibilitychange", () => {
+            if (document.hidden) clearAuto();
+            else startAuto();
+          });
+          window.addEventListener("resize", render);
+          window.addEventListener("load", render);
+
+          requestAnimationFrame(() => {
+            render();
+            startAuto();
+          });
+          requestAnimationFrame(render);
+        });
+      })();
+    </script>
+  </body>
+</html>

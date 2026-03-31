@@ -1,0 +1,162 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import LocationMapSection from "../components/sections/LocationMapSection.astro";
+import { siteConfig } from "../data/site";
+
+const dailySpecials = [
+  {
+    title: "The Soul of the Neighborhood.",
+    text: "Authentic flavors, bold colors, and the best tacos in town. Welcome to Golden Tortilla.",
+    cta: "Explore Our Menu",
+    href: "/menu",
+    image: "/images/hero/soul-neighborhood.png",
+  },
+  {
+    title: "Show up for Tacos. Stay for Dessert.",
+    text: "End your night right with our golden, crispy, chocolate-dipped churros.",
+    cta: "See Desserts",
+    href: "/menu#desserts",
+    image: "/images/hero/stay-for-desserts.png",
+  },
+  {
+    title: "Every Day is a Fiesta",
+    text: "Step into a vibrant atmosphere where every meal feels like a celebration.",
+    cta: "Visit Us Today",
+    href: "#location",
+    image: "/images/hero/everyday-fiesta.png",
+  },
+];
+---
+
+<BaseLayout title="The Golden Tortilla | Mexican Taco Shop">
+  <section class="slider golden-hero" aria-label="Daily specials slider" data-slider-root data-slider-loop="true" data-slider-autoplay="4600">
+    <div class="slider__viewport golden-hero__viewport" data-slider-viewport>
+      <ul class="slider__track" data-slider-track style="transform: translateX(0px);">
+        {dailySpecials.map((special) => (
+          <li class="slider__slide golden-hero__slide" data-slider-slide style={`background-image: linear-gradient(rgba(0,0,0,0.48), rgba(0,0,0,0.48)), url(${special.image});`}>
+            <div class="container golden-hero__content">
+              <h1 class="golden-title">{special.title}</h1>
+              <p class="golden-lede">{special.text}</p>
+              <p class="golden-hero__cta">
+                <a class="btn golden-hero__btn" href={special.href}>
+                  {special.cta}
+                  {(special.cta === "Explore Our Menu" || special.cta === "See Desserts") && (
+                    <span class="golden-hero__btn-arrow" aria-hidden="true">→</span>
+                  )}
+                </a>
+              </p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <div class="slider__controls golden-hero__controls">
+      <div class="slider__dots">
+        {dailySpecials.map((_, i) => (
+          <button
+            type="button"
+            class:list={["slider__dot", i === 0 && "slider__dot--active"]}
+            data-slider-dot
+            data-slider-index={i}
+            aria-label={`Go to special ${i + 1}`}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="story-section" aria-labelledby="story-heading">
+    <div class="container story-section__inner">
+      <p class="story-section__kicker">Our Story</p>
+      <h2 id="story-heading" class="story-section__title">
+        Not fast food.<br />
+        Not fine dining.<br />
+        <span>Just damn good tacos.</span>
+      </h2>
+      <p class="story-section__lede">
+        Golden Tortilla was born out of a love for vibrant flavors, warm hospitality, and the belief that a
+        neighborhood taco shop should be the heartbeat of the community. We craft every taco with soul, pour every
+        margarita with joy, and welcome every guest like family.
+      </p>
+    </div>
+  </section>
+
+  <section class="section quick-links" aria-labelledby="menu-jump-links">
+    <div class="container">
+      <div class="quick-links__top">
+        <div>
+          <h2 id="menu-jump-links" class="quick-links__title">Neighborhood Favorites</h2>
+          <p class="quick-links__lede">A sneak peek at what the locals are ordering right now.</p>
+        </div>
+        <p class="quick-links__cta quick-links__cta--top">
+          <a class="btn btn-secondary" href="/menu">View Full Menu</a>
+        </p>
+      </div>
+      <div class="quick-links__cards">
+        <article class="quick-card card">
+          <p class="quick-card__badge">★ Fan Favorite</p>
+          <div class="quick-card__media">
+            <img src="https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=900&q=80" alt="Classic Carnitas taco" />
+          </div>
+          <div class="quick-card__body">
+            <div class="quick-card__meta">
+              <h3>Classic Carnitas</h3>
+              <strong>$3.50</strong>
+            </div>
+            <p class="quick-card__description">Slow-cooked pork, onions, cilantro, and warm corn tortillas.</p>
+            <p class="quick-card__actions">
+              <a href={siteConfig.ctaPrimaryHref} target="_blank" rel="noopener noreferrer">Add to Order</a>
+            </p>
+          </div>
+        </article>
+        <article class="quick-card card">
+          <p class="quick-card__badge">★ Fan Favorite</p>
+          <div class="quick-card__media">
+            <img src="/images/home/golden-tortilla-burrito.png" alt="Golden Tortilla Burrito cut in half on a plate" />
+          </div>
+          <div class="quick-card__body">
+            <div class="quick-card__meta">
+              <h3>Golden Tortilla Burrito</h3>
+              <strong>$10.99</strong>
+            </div>
+            <p class="quick-card__description">Loaded with steak, beans, rice, guacamole, and melted cheese.</p>
+            <p class="quick-card__actions">
+              <a href={siteConfig.ctaPrimaryHref} target="_blank" rel="noopener noreferrer">Add to Order</a>
+            </p>
+          </div>
+        </article>
+        <article class="quick-card card">
+          <p class="quick-card__badge">★ Fan Favorite</p>
+          <div class="quick-card__media">
+            <img src="/images/hero/stay-for-desserts.png" alt="Churros with chocolate dessert plate" />
+          </div>
+          <div class="quick-card__body">
+            <div class="quick-card__meta">
+              <h3>Churros with Chocolate</h3>
+              <strong>$5.50</strong>
+            </div>
+            <p class="quick-card__description">Golden churros dusted in cinnamon sugar with dark chocolate dip.</p>
+            <p class="quick-card__actions">
+              <a href={siteConfig.ctaPrimaryHref} target="_blank" rel="noopener noreferrer">Add to Order</a>
+            </p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="fiesta-cta" aria-labelledby="fiesta-cta-heading">
+    <div class="container fiesta-cta__inner">
+      <h2 id="fiesta-cta-heading" class="fiesta-cta__title">Ready for a Fiesta?</h2>
+      <p class="fiesta-cta__lede">Swing by tonight or order ahead. We've got the margaritas chilling.</p>
+      <p class="fiesta-cta__actions">
+        <a class="fiesta-cta__btn fiesta-cta__btn--primary" href={siteConfig.ctaPrimaryHref} target="_blank" rel="noopener noreferrer">
+          Order Online Now
+        </a>
+        <a class="fiesta-cta__btn fiesta-cta__btn--secondary" href="#location">Get Directions</a>
+      </p>
+    </div>
+  </section>
+
+  <LocationMapSection />
+</BaseLayout>

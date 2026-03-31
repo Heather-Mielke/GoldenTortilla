@@ -1,0 +1,57 @@
+---
+import { siteConfig } from "../../data/site";
+---
+
+<dialog class="modal" id="welcome-modal" aria-labelledby="welcome-modal-title" aria-modal="true">
+  <div class="modal__panel card">
+    <div class="modal__header">
+      <h2 class="modal__title" id="welcome-modal-title">Thanks for visiting</h2>
+      <button type="button" class="modal__close" data-welcome-close aria-label="Close welcome message">
+        ×
+      </button>
+    </div>
+    <p style="margin: 0; color: var(--muted); line-height: 1.55;">
+      Welcome to <strong style="color: var(--text);">{siteConfig.businessName}</strong>.
+      Use the theme picker in the header to recolor the whole site. You can swap this copy for any client promo or
+      cookie notice.
+    </p>
+    <div class="modal__actions">
+      <button type="button" class="btn btn-primary" data-welcome-close>Got it</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const SESSION_KEY = "welcome-modal-seen";
+
+  function initWelcomeModal() {
+    const dialog = document.getElementById("welcome-modal") as HTMLDialogElement | null;
+    if (!dialog) return;
+
+    dialog.querySelectorAll("[data-welcome-close]").forEach((el) => {
+      el.addEventListener("click", () => dialog.close());
+    });
+
+    dialog.addEventListener("close", () => {
+      try {
+        sessionStorage.setItem(SESSION_KEY, "1");
+      } catch {
+        /* no-op */
+      }
+    });
+
+    let shouldShow = true;
+    try {
+      shouldShow = !sessionStorage.getItem(SESSION_KEY);
+    } catch {
+      shouldShow = true;
+    }
+
+    if (shouldShow) {
+      dialog.showModal();
+    }
+  }
+
+  initWelcomeModal();
+</script>
+

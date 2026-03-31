@@ -1,0 +1,378 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { siteConfig } from "../data/site";
+
+interface MenuItem {
+  name: string;
+  price: string;
+  description: string;
+  photo: string;
+  accent?: boolean;
+}
+
+interface MenuCategory {
+  id: string;
+  title: string;
+  items: MenuItem[];
+}
+
+const menuCategories: MenuCategory[] = [
+  {
+    id: "tacos",
+    title: "Tacos",
+    items: [
+      {
+        name: "Heritage Asada Taco",
+        price: "$5.75",
+        description: "Char-grilled steak with onion, cilantro, and fresh lime.",
+        photo: "/images/menu/taco-heritage-beef.png",
+      },
+      {
+        name: "Street Trio Tacos",
+        price: "$14.95",
+        description: "Three classic street tacos loaded with slow-braised beef and herbs.",
+        photo: "/images/menu/taco-street-trio.png",
+      },
+      {
+        name: "Birria Crunch Taco",
+        price: "$6.50",
+        description: "Crispy birria shell, rich consome dip, and cilantro-onion finish.",
+        photo: "/images/menu/taco-birria-crunch.png",
+      },
+      {
+        name: "Lime Squeeze Veggie Taco",
+        price: "$5.25",
+        description: "Roasted sweet potato, chickpeas, avocado, and bright chile-lime.",
+        photo: "/images/menu/taco-lime-squeeze-veggie.png",
+      },
+      {
+        name: "Baja Fish Flight",
+        price: "$13.50",
+        description: "Three Baja-style fish tacos with cabbage and creamy salsa.",
+        photo: "/images/menu/taco-baja-fish-flight.png",
+      },
+      {
+        name: "Market Veggie Taco",
+        price: "$5.50",
+        description: "Seasonal grilled vegetables, black beans, cotija, and pico.",
+        photo: "/images/menu/taco-market-veggie.png",
+      },
+      {
+        name: "Mundet Birria Board",
+        price: "$16.25",
+        description: "Birria taco board with house salsa, lime wedges, and crunchy slaw.",
+        photo: "/images/menu/taco-mundet-birria-board.png",
+      },
+      {
+        name: "Dorado Pair",
+        price: "$11.25",
+        description: "Two griddled dorado tacos with melty cheese and salsa roja.",
+        photo: "/images/menu/taco-dorado-pair.png",
+      },
+      {
+        name: "Mundet Carnitas Tray",
+        price: "$15.95",
+        description: "Carnitas tacos topped with crema, radish, and house chile drizzle.",
+        photo: "/images/menu/taco-mundet-carnitas-tray.png",
+      },
+      {
+        name: "Fajita Lime Plate",
+        price: "$12.75",
+        description: "Sizzling fajita-style beef tacos with peppers, onions, and lime.",
+        photo: "/images/menu/taco-fajita-lime-plate.png",
+      },
+    ],
+  },
+  {
+    id: "burritos",
+    title: "Burritos",
+    items: [
+      {
+        name: "Carne Asada Loaded Burrito",
+        price: "$13.95",
+        description: "Grilled steak, Mexican rice, pinto beans, queso, and roasted salsa.",
+        photo: "/images/menu/burrito-carne-asada-loaded.png",
+      },
+      {
+        name: "Tofu Verde Burrito",
+        price: "$12.50",
+        description: "Marinated tofu, cilantro rice, black beans, pico, and green chile sauce.",
+        photo: "/images/menu/burrito-tofu-verde.png",
+      },
+      {
+        name: "Plant Power Burrito",
+        price: "$12.75",
+        description: "Plant-based protein, yellow rice, black beans, spinach, and chipotle crema.",
+        photo: "/images/menu/burrito-plant-power-wrap.png",
+      },
+      {
+        name: "Fire-Grilled Burrito Wrap",
+        price: "$13.25",
+        description: "Flame-kissed chicken, peppers, onions, rice, and smoky red salsa.",
+        photo: "/images/menu/burrito-fire-grilled-wrap.png",
+      },
+      {
+        name: "Chicken Crunch Burrito",
+        price: "$13.50",
+        description: "Grilled chicken, cabbage crunch, cilantro-lime crema, and charred jalapeno.",
+        photo: "/images/menu/burrito-chicken-crunch-wrap.png",
+      },
+      {
+        name: "Street Burrito Flight",
+        price: "$15.95",
+        description: "A sampler of wrapped street-style fillings with house salsas on the side.",
+        photo: "/images/menu/burrito-street-wrap-flight.png",
+      },
+    ],
+  },
+  {
+    id: "sides",
+    title: "Sides",
+    items: [
+      {
+        name: "Griddled Quesadilla Wedges",
+        price: "$7.95",
+        description: "Toasted tortilla wedges with melty cheese, crema, and fresh pico.",
+        photo: "/images/menu/side-griddled-quesadilla-wedges.png",
+      },
+      {
+        name: "Southwest Salad Bowl",
+        price: "$8.50",
+        description: "Crisp romaine, black beans, olives, guacamole, and creamy avocado dressing.",
+        photo: "/images/menu/side-southwest-salad-bowl.png",
+      },
+      {
+        name: "Fresh Pico de Gallo",
+        price: "$4.75",
+        description: "House-chopped tomato, onion, jalapeno, and cilantro salsa.",
+        photo: "/images/menu/side-fresh-pico-salsa.png",
+      },
+      {
+        name: "Elote Lime Corn",
+        price: "$5.95",
+        description: "Sweet corn on the cob with cotija, chile powder, crema, and lime.",
+        photo: "/images/menu/side-elote-lime-corn.png",
+      },
+      {
+        name: "Street Elote Duo",
+        price: "$6.75",
+        description: "Two Mexican street corn skewers with queso fresco and chile spice.",
+        photo: "/images/menu/side-street-elote-duo.png",
+      },
+    ],
+  },
+  {
+    id: "desserts",
+    title: "Desserts",
+    items: [
+      {
+        name: "Caramel Flan Slice",
+        price: "$7.25",
+        description: "Silky vanilla flan topped with dulce drizzle and a cherry finish.",
+        photo: "/images/menu/dessert-caramel-flan-slice.png",
+      },
+      {
+        name: "Cannoli Cream Duo",
+        price: "$7.50",
+        description: "Two crisp pastry shells filled with sweet cream and mint garnish.",
+        photo: "/images/menu/dessert-cannoli-cream-duo.png",
+      },
+      {
+        name: "Churro Choco Sundae",
+        price: "$8.25",
+        description: "Chocolate-glazed mini sundae with churro sticks and fresh strawberry.",
+        photo: "/images/menu/dessert-churro-choco-sundae.png",
+      },
+      {
+        name: "Sugar Churro Board",
+        price: "$8.75",
+        description: "Golden churros dusted in cinnamon sugar with trio dipping sauces.",
+        photo: "/images/menu/dessert-sugar-churro-board.png",
+      },
+      {
+        name: "Raspberry Cheesecake",
+        price: "$7.95",
+        description: "Creamy cheesecake slice served with bright raspberries.",
+        photo: "/images/menu/dessert-raspberry-cheesecake.png",
+      },
+      {
+        name: "Caramel Fritter a la Mode",
+        price: "$8.50",
+        description: "Warm fritter bites over vanilla ice cream with caramel sauce.",
+        photo: "/images/menu/dessert-caramel-fritter-ala-mode.png",
+      },
+    ],
+  },
+  {
+    id: "drinks",
+    title: "Drinks",
+    items: [
+      {
+        name: "Mango Sunrise Fresca",
+        price: "$5.25",
+        description: "Blended mango refresher served ice-cold with a bright citrus finish.",
+        photo: "/images/menu/drink-mango-sunrise-fresca.png",
+      },
+      {
+        name: "Citrus Agua Fresca",
+        price: "$4.95",
+        description: "Fresh orange and lemon cooler over ice with a crisp finish.",
+        photo: "/images/menu/drink-citrus-agua-fresca.png",
+      },
+      {
+        name: "House Margarita",
+        price: "$9.50",
+        description: "Classic lime margarita with a salted rim and dehydrated citrus garnish.",
+        photo: "/images/menu/drink-house-margarita.png",
+      },
+      {
+        name: "Prickly Pear Spritz",
+        price: "$8.95",
+        description: "Sparkling prickly pear and lime spritz with rosemary aromatics.",
+        photo: "/images/menu/drink-prickly-pear-spritz.png",
+      },
+      {
+        name: "Mint Lime Soda",
+        price: "$5.75",
+        description: "Refreshing lime soda with muddled mint and plenty of ice.",
+        photo: "/images/menu/drink-mint-lime-soda.png",
+      },
+      {
+        name: "Twisted Lime Margarita",
+        price: "$10.25",
+        description: "Signature margarita with fresh lime wedges and a smooth citrus profile.",
+        photo: "/images/menu/drink-twisted-lime-margarita.png",
+      },
+    ],
+  },
+];
+---
+
+<BaseLayout title="Menu | The Golden Tortilla">
+  <section class="menu-page menu-page--hero">
+    <div class="container">
+      <h1 class="menu-page__title">Our Menu</h1>
+      <p class="menu-page__lede">Crafted with passion, served with pride. Discover your new favorites.</p>
+    </div>
+  </section>
+
+  <section class="menu-subnav-wrap">
+    <div class="container">
+      <nav class="menu-page__nav menu-page__nav--sticky" aria-label="Menu category links">
+        {menuCategories.map((category) => (
+          <a href={`#${category.id}`}>{category.title}</a>
+        ))}
+      </nav>
+    </div>
+  </section>
+
+  {menuCategories.map((category) => (
+    <section id={category.id} class="section menu-category" aria-labelledby={`${category.id}-heading`}>
+      <div class="container">
+        <h2 id={`${category.id}-heading`} class="menu-category__title">{category.title}</h2>
+        <div class="menu-grid">
+          {category.items.map((item) => (
+            <article class="menu-item card">
+              <img class="menu-item__image" src={item.photo} alt={item.name} loading="lazy" />
+              <div class="menu-item__body">
+                <p class="menu-item__top">
+                  <span class:list={["menu-item__name", item.accent && "menu-item__name--accent"]}>{item.name}</span>
+                  <strong>{item.price}</strong>
+                </p>
+                <p class="menu-item__description">{item.description}</p>
+                <p class="menu-item__actions">
+                  <a class="menu-item__order" href={siteConfig.ctaPrimaryHref} target="_blank" rel="noopener noreferrer">
+                    Add to Order
+                  </a>
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  ))}
+</BaseLayout>
+
+<script>
+  const navLinks = Array.from(document.querySelectorAll('.menu-page__nav a'));
+  const sections = navLinks
+    .map((link) => {
+      const id = link.getAttribute('href')?.replace('#', '');
+      if (!id) return null;
+      const section = document.getElementById(id);
+      return section ? { link, section } : null;
+    })
+    .filter(Boolean);
+
+  if (sections.length > 0) {
+    const getScrollOffset = () => {
+      const header = document.querySelector('.gt-header');
+      const subnav = document.querySelector('.menu-subnav-wrap');
+      const headerHeight = header instanceof HTMLElement ? header.offsetHeight : 0;
+      const subnavHeight = subnav instanceof HTMLElement ? subnav.offsetHeight : 0;
+      return headerHeight + subnavHeight + 10;
+    };
+
+    const setActive = (activeLink) => {
+      sections.forEach(({ link }) => {
+        const isActive = link === activeLink;
+        link.classList.toggle('is-active', isActive);
+        if (isActive) {
+          link.setAttribute('aria-current', 'true');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
+    };
+
+    setActive(sections[0].link);
+    const firstSection = sections[0].section;
+
+    const resetToFirstAtTop = () => {
+      const firstTop = firstSection.getBoundingClientRect().top + window.scrollY;
+      if (window.scrollY < firstTop - 140) {
+        setActive(sections[0].link);
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        resetToFirstAtTop();
+
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        if (visible.length === 0) return;
+
+        const activeSection = visible[0].target;
+        const active = sections.find(({ section }) => section === activeSection);
+        if (active) setActive(active.link);
+      },
+      {
+        rootMargin: '-30% 0px -55% 0px',
+        threshold: [0.2, 0.35, 0.5, 0.65],
+      }
+    );
+
+    sections.forEach(({ section }) => observer.observe(section));
+
+    sections.forEach(({ link, section }) => {
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        const top = section.getBoundingClientRect().top + window.scrollY - getScrollOffset();
+        window.scrollTo({
+          top: Math.max(0, top),
+          behavior: 'smooth',
+        });
+        setActive(link);
+        history.replaceState(null, '', `#${section.id}`);
+      });
+    });
+
+    window.addEventListener('scroll', resetToFirstAtTop, { passive: true });
+    window.addEventListener('resize', resetToFirstAtTop);
+    resetToFirstAtTop();
+  }
+</script>
