@@ -1220,6 +1220,15 @@ body {
   color: var(--brand-dark);
 }
 
+.gt-header:not(.gt-header--scrolled) .gt-header__brand,
+.gt-header:not(.gt-header--scrolled) .gt-header__link {
+  color: #fffdf8;
+}
+
+.gt-header:not(.gt-header--scrolled) .gt-header__link:hover {
+  color: rgba(255, 253, 248, 0.88);
+}
+
 .gt-header--scrolled {
   background: #fffdf8;
   border-color: #f0e6d7;
@@ -1896,6 +1905,7 @@ body {
   .gt-header__link {
     padding: 0.55rem 0.65rem;
     border-radius: 0.55rem;
+    color: var(--text);
   }
 
   .gt-header__link:hover {
