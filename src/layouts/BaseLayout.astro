@@ -2,7 +2,6 @@
 import "../styles/global.css";
 import SiteHeader from "../components/site/SiteHeader.astro";
 import SiteFooter from "../components/site/SiteFooter.astro";
-import WelcomeModal from "../components/ui/WelcomeModal.astro";
 import { siteConfig } from "../data/site";
 
 const { title = siteConfig.businessName } = Astro.props;
@@ -34,7 +33,6 @@ const { title = siteConfig.businessName } = Astro.props;
     </script>
   </head>
   <body>
-    <WelcomeModal />
     <SiteHeader />
     <main class="site-main">
       <slot />
